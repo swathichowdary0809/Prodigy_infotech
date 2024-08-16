@@ -1,0 +1,48 @@
+import numpy as np
+from PIL import Image
+import matplotlib.pyplot as plt
+
+def load_image(image_path):
+    return Image.open(r"C:\Users\swath\OneDrive\Desktop\Pixel manupliation.jpg")
+
+def save_image(image, image_path):
+    image.save(image_path)
+
+def encrypt_image(image, key):
+    image_array = np.array(image)
+    encrypted_array = image_array ^ key 
+    encrypted_image = Image.fromarray(encrypted_array)
+    return encrypted_image
+
+def decrypt_image(image, key):
+    return encrypt_image(image, key)  
+
+def display_images(images, titles):
+    fig, axs = plt.subplots(1, len(images), figsize=(15, 5))
+    for ax, img, title in zip(axs, images, titles):
+        ax.imshow(img)
+        ax.set_title(title)
+        ax.axis('off')
+    plt.show()
+
+
+image_path = 'path_to_your_image.jpg'
+image = load_image(image_path)
+
+
+key = 123  
+encrypted_image = encrypt_image(image, key)
+
+
+encrypted_image_path = 'encrypted_image.png'
+save_image(encrypted_image, encrypted_image_path)
+
+
+decrypted_image = decrypt_image(encrypted_image, key)
+
+
+decrypted_image_path = 'decrypted_image.png'
+save_image(decrypted_image, decrypted_image_path)
+
+
+display_images([image, encrypted_image, decrypted_image], ["Original", "Encrypted", "Decrypted"])
