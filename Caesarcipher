@@ -1,0 +1,92 @@
+import plotly.graph_objs as go
+import plotly.offline as pyo
+from collections import Counter
+import string
+def plot_frequency(text, title):
+    freq = Counter(text.lower())
+    letters = [char for char in string.ascii_lowercase]
+    counts = [freq[char] for char in letters]
+    data = [go.Bar(x=letters, y=counts)]
+    layout = go.Layout(title=title, xaxis=dict(title='Letters'), yaxis=dict(title='Frequency'))
+    fig = go.Figure(data=data, layout=layout)
+    pyo.plot(fig, filename=f'{title.replace(" ", "_").lower()}.html')
+def encrypt(text, shift):
+    encrypted_text = ""
+    for char in text:
+        if char.isalpha():
+            shift_amount = 65 if char.isupper() else 97
+            encrypted_text += chr((ord(char) + shift - shift_amount) % 26 + shift_amount)
+        else:
+            encrypted_text += char
+    return encrypted_text
+def decrypt(text, shift):
+    return encrypt(text, -shift)
+message = "Hello, World!"
+shift = 3
+encrypted_message = encrypt(message, shift)
+decrypted_message = decrypt(encrypted_message, shift)
+print(f"Original: {message}")
+print(f"Encrypted: {encrypted_message}")
+print(f"Decrypted: {decrypted_message}")
+plot_frequency(message, "Original Text Frequency")
+plot_frequency(encrypted_message, "Encrypted Text Frequency")
+
+
+Original: Hello, World!
+Encrypted: Khoor, Zruog!
+Decrypted: Hello, World!
+
+
+def encrypt(text, shift):
+    encrypted_text = ""
+    for char in text:
+        if char.isalpha():
+            shift_amount = 65 if char.isupper() else 97
+            encrypted_text += chr((ord(char) + shift - shift_amount) % 26 + shift_amount)
+        else:
+            encrypted_text += char
+    return encrypted_text
+def decrypt(text, shift):
+    return encrypt(text, -shift)
+def get_valid_shift():
+    while True:
+        try:
+            shift = int(input("Enter the shift value (integer): "))
+            return shift % 26
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
+def get_message():
+    return input("Enter your message: ")
+def main():
+    print("Welcome to the Caesar Cipher Program!")
+    while True:
+        choice = input("Do you want to (e)ncrypt or (d)ecrypt a message? (q to quit): ").lower()
+        if choice == 'q':
+            break
+        elif choice in ['e', 'd']:
+            message = get_message()
+            shift = get_valid_shift()
+            if choice == 'e':
+                result = encrypt(message, shift)
+                print(f"Encrypted Message: {result}")
+            else:
+                result = decrypt(message, shift)
+                print(f"Decrypted Message: {result}")
+        else:
+            print("Invalid choice. Please choose 'e' for encrypt, 'd' for decrypt, or 'q' to quit.")
+    print("Goodbye!")
+if __name__ == "__main__":
+    main()
+
+
+Welcome to the Caesar Cipher Program!
+Do you want to (e)ncrypt or (d)ecrypt a message? (q to quit):  e
+Enter your message:  Hello
+Enter the shift value (integer):  8
+Encrypted Message: Pmttw
+Do you want to (e)ncrypt or (d)ecrypt a message? (q to quit):  d
+Enter your message:  Pmttw
+Enter the shift value (integer):  8
+Decrypted Message: Hello
+Do you want to (e)ncrypt or (d)ecrypt a message? (q to quit):  q
+Goodbye!
